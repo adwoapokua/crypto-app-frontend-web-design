@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import FooterUser from "../components/layout/FooterUser";
 import NavbarAuth from "../components/layout/NavbarAuth";
 import Sidebar from "../components/layout/Sidebar";
 import { Button } from "../components/common/button";
-import { getUserProfile, updateUserProfile } from "../lib/api";
+import { getUserProfile, updateUserProfile, uploadImage } from "../lib/api";
 
 function UserProfile() {
   const [name, setName] = useState("");
@@ -16,6 +16,20 @@ function UserProfile() {
   const [success, setSuccess] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const handleClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImagePreview(URL.createObjectURL(file));
+
+    uploadImage(file);
+  }
 
   useEffect(() => {
     async function loadProfile() {
@@ -25,8 +39,9 @@ function UserProfile() {
       try {
         const data = await getUserProfile();
         console.log("Profile data:", data);
-        setName(data?.user?.name || data?.name || "");
-        setEmail(data?.user?.email || data?.email || "");
+        setName(data?.user?.name || "");
+        setEmail(data?.user?.email || "");
+        localStorage.setItem("profileImage", data?.user?.image);
       } catch (err) {
         setError(err.message || "Unable to load profile.");
       } finally {
@@ -71,16 +86,33 @@ function UserProfile() {
           <div className="w-full max-w-2xl bg-white rounded-lg p-8 shadow-sm">
             <h1 className="text-4xl font-semibold mb-6">View & Edit profile</h1>
 
-            <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 rounded-full bg-linear-to-r from-pink-400 via-purple-400 to-blue-400"></div>
-              <button
-                type="button"
-                className="text-sm text-blue-600 hover:underline"
-                onClick={() => navigate("/user")}
-              >
-                Change profile photo
-              </button>
-            </div>
+          <div className="flex items-center gap-4">
+          <div
+            className="w-16 h-16 rounded-full overflow-hidden bg-gray-200 cursor-pointer"
+            onClick={handleClick}
+          >
+            <img
+              src={imagePreview || localStorage.getItem("profileImage")}
+              alt="profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          <span
+            onClick={handleClick}
+            className="text-blue-500 cursor-pointer text-sm"
+          >
+            Change profile photo
+          </span>
+
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+            accept="image/*"
+          />
+        </div>
 
             {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
             {success && <p className="mb-4 text-sm text-green-600">{success}</p>}

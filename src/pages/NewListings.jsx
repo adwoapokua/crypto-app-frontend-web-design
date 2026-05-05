@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getNewListings } from "../lib/api";
+import CryptoNav from "../components/layout/CryptoNav";
 
 export default function NewListings() {
   const [listings, setListings] = useState([]);
@@ -34,30 +35,7 @@ export default function NewListings() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Nav */}
-      <nav className="border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 bg-white z-10">
-        <div className="flex items-center gap-8">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white text-xs font-bold">C</span>
-            </div>
-            <span className="font-semibold text-gray-900 text-lg">Coinbase</span>
-          </Link>
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-500">
-            <Link to="/crypto" className="hover:text-gray-900 transition">Prices</Link>
-            <Link to="/crypto/gainers" className="hover:text-gray-900 transition">Gainers</Link>
-            <Link to="/crypto/new" className="text-gray-900">New</Link>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <Link to="/crypto/add" className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-full transition">
-            + Add Crypto
-          </Link>
-          <Link to="/profile" className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
-            <span className="text-xs font-semibold text-gray-600">P</span>
-          </Link>
-        </div>
-      </nav>
+      <CryptoNav></CryptoNav>
 
       <div className="max-w-5xl mx-auto px-4 py-10">
         {/* Header */}

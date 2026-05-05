@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "../common/button";
 import { FaBell } from "react-icons/fa6";
+import { useState } from "react";
 
 const navItems = [
   { name: "Drops", path: "/drops" },
@@ -11,6 +12,9 @@ const navItems = [
 
 
 function NavbarAuth() {
+  const [image, setImage] = useState(
+    localStorage.getItem("profileImage")
+  );
   return (
     <>
     <nav className="w-full border-b border-[#E9E9E9] flex h-13 justify-between px-10 fixed  bg-white mb-30">
@@ -33,7 +37,12 @@ function NavbarAuth() {
       </ul>
       <div className="flex items-center gap-3 font-semibold">
         <div ><FaBell/></div>
-        <div className="h-10 w-10 bg-blue-400 hover:bg-blue-300 rounded-4xl flex justify-center items-center"></div>
+        <div className="h-10 w-10"> 
+          <img
+            src={image}
+            className="w-10 h-10 rounded-full object-cover"
+          />
+        </div>
         <Link to="/create"><Button variant="blue" label="Create NFTs" rounded="large" size="medium"></Button></Link>
       </div>
     </nav>

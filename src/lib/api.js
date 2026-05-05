@@ -34,6 +34,21 @@ async function request(path, options = {}) {
   return data;
 }
 
+export const uploadImage = async (file) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    const res = await fetch("http://localhost:5000/upload-profile/USER_ID", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+
+    // save globally (important for navbar reuse)
+    localStorage.setItem("profileImage", data.profileImage);
+  };
+
 export async function signIn({ email, password }) {
   return request("/api/auth/login", {
     method: "POST",
